@@ -150,3 +150,29 @@ input::placeholder {
   from { transform: scale(0.5); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+/* Button umum */
+button {
+  background: linear-gradient(45deg, #0ff, #09f);
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 6px;
+  color: #fff;              /* teks putih jelas */
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+}
+
+/* Tombol Hapus (warna merah) */
+button.delete {
+  background: linear-gradient(45deg, #f00, #a00);
+}
+button.delete:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+  background: linear-gradient(45deg, #d00, #800);
+}
