@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Todo List</title>
+  <title>My ToDo List</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- Loading -->
   <div id="loading">
-    <h2>⚡ Loading...</h2>
+    <div class="loader"></div>
+    <h2>Loading...</h2>
   </div>
 
-  <div class="container hidden" id="content">
-    <h1>📋 My Todo List</h1>
-    <button class="addBtn" onclick="window.location.href='form.html'">➕ Tambah</button>
-
-    <table>
+  <div class="container">
+    <h1>🔥 My ToDo List 🔥</h1>
+    <button id="btnTambah">+ Tambah Data</button>
+    <table id="todoTable">
       <thead>
         <tr>
           <th>No</th>
@@ -32,8 +32,8 @@
     </table>
   </div>
 
-  <!-- Notifikasi -->
-  <div id="notification" class="hidden"></div>
+  <!-- Notif -->
+  <div id="notif"></div>
 
   <script src="script.js"></script>
 </body>

@@ -9,24 +9,23 @@
 <body>
   <!-- Loading -->
   <div id="loading">
-    <h2>⚡ Loading...</h2>
+    <div class="loader"></div>
+    <h2>Loading...</h2>
   </div>
 
-  <div id="content" class="hidden form-container">
+  <div class="form-container">
     <h1>➕ Tambah Data</h1>
     <form id="dataForm">
-      <input type="text" id="nama" placeholder="Nama" required>
-      <input type="text" id="asal" placeholder="Asal" required>
-      <input type="number" id="umur" placeholder="Umur" required>
-      <button type="submit" class="saveBtn">Simpan</button>
+      <input type="text" id="nama" placeholder="Masukkan Nama" required>
+      <input type="text" id="asal" placeholder="Masukkan Asal" required>
+      <input type="number" id="umur" placeholder="Masukkan Umur" required>
+      <button type="submit">Simpan</button>
     </form>
+    <button id="btnKembali">⬅ Kembali</button>
   </div>
 
-  <!-- Tombol kembali -->
-  <button class="backBtn" onclick="window.location.href='index.html'">⬅ Kembali</button>
-
-  <!-- Notifikasi -->
-  <div id="notification" class="hidden"></div>
+  <!-- Notif -->
+  <div id="notif"></div>
 
   <script src="script.js"></script>
 </body>

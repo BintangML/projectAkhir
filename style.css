@@ -1,12 +1,8 @@
-/* Reset */
+/* General */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  margin: 0; padding: 0; box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
 }
-
-/* Body */
 body {
   background: #111;
   color: #fff;
@@ -15,41 +11,75 @@ body {
   justify-content: center;
   align-items: center;
 }
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0ff;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
+}
 
-/* Loading screen */
+/* Loading */
 #loading {
   position: fixed;
   inset: 0;
   background: #000;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 999;
 }
-#loading h2 {
-  color: #0ff;
-  font-size: 28px;
-  animation: blink 1s infinite;
+.loader {
+  border: 6px solid rgba(255,255,255,0.1);
+  border-top: 6px solid #0ff;
+  border-right: 6px solid #f0f;
+  border-radius: 50%;
+  width: 60px; height: 60px;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 20px #0ff, 0 0 30px #f0f;
 }
-@keyframes blink {
-  50% { opacity: 0.3; }
+@keyframes spin {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
+}
+#loading h2 {
+  margin-top: 15px;
+  font-size: 18px;
+  color: #0ff;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
 }
 
 /* Container */
 .container, .form-container {
-  background: #1e1e1e;
+  background: rgba(255,255,255,0.05);
   padding: 20px;
   border-radius: 12px;
+  box-shadow: 0 0 15px #0ff, 0 0 25px #f0f;
   width: 90%;
   max-width: 800px;
-  box-shadow: 0 0 15px #0ff;
-  text-align: center;
 }
-.hidden { display: none; }
 
-h1 {
-  margin-bottom: 15px;
-  text-shadow: 0 0 10px #0ff;
+/* Button */
+button {
+  background: linear-gradient(45deg, #0ff, #f0f);
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 10px #0ff, 0 0 15px #f0f;
+}
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #0ff, 0 0 25px #f0f;
+}
+#btnKembali {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
 }
 
 /* Table */
@@ -59,99 +89,59 @@ table {
   margin-top: 15px;
 }
 th, td {
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #444;
+  text-align: center;
 }
 th {
-  background: #333;
+  background: rgba(0,255,255,0.2);
+  color: #0ff;
+}
+td {
+  background: rgba(255,255,255,0.05);
 }
 .empty {
-  text-align: center;
   color: #888;
+  font-style: italic;
 }
 
-/* Buttons */
-.addBtn, .saveBtn {
-  background: #0ff;
-  color: #000;
-  border: none;
-  padding: 10px 20px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
 }
-.addBtn:hover, .saveBtn:hover {
-  background: #fff;
-  color: #000;
-}
-
-.actionBtn {
-  margin: 0 3px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: bold;
-}
-.editBtn {
-  background: #0f0;
-  color: #000;
-}
-.deleteBtn {
-  background: #f00;
-  color: #fff;
-}
-
-/* Back button */
-.backBtn {
-  background: #666;
-  color: #fff;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  position: fixed;
-  bottom: 15px;
-  left: 15px; /* 🔥 fix pojok kiri bawah */
-  box-shadow: 0 0 10px #000;
-  transition: 0.3s;
-}
-.backBtn:hover {
-  background: #0ff;
-  color: #000;
-}
-
-/* Form input */
-form input {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
+input {
   padding: 10px;
-  border-radius: 6px;
+  margin-bottom: 15px;
   border: none;
+  border-radius: 6px;
   outline: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  box-shadow: inset 0 0 10px #0ff;
+}
+input::placeholder {
+  color: #aaa;
 }
 
-/* Notifikasi */
-#notification {
+/* Notif */
+#notif {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #222;
-  padding: 15px 20px;
+  background: #0f0;
+  color: #000;
+  padding: 12px 20px;
   border-radius: 8px;
-  color: #fff;
-  box-shadow: 0 0 15px #0ff;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: 0.4s ease;
-  z-index: 1000;
+  display: none;
+  font-weight: bold;
+  box-shadow: 0 0 20px #0ff, 0 0 25px #f0f;
+  animation: zoomIn 0.4s ease;
 }
-#notification.show {
-  opacity: 1;
-  transform: translateY(0);
+#notif.error { background: #f00; color: #fff; }
+#notif.warning { background: #ff0; color: #000; }
+
+@keyframes zoomIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

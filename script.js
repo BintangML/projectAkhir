@@ -1,117 +1,113 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const loading = document.getElementById("loading");
-  const content = document.getElementById("content");
-  if (loading && content) {
-    setTimeout(() => {
-      loading.style.display = "none";
-      content.classList.remove("hidden");
-    }, 1000);
-  }
-
-  // Index page
-  const tableBody = document.getElementById("todoBody");
-  if (tableBody) {
-    let data = JSON.parse(localStorage.getItem("todoData")) || [];
-
-    function renderTable() {
-      tableBody.innerHTML = "";
-      if (data.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" class="empty">⚠ Data tidak terisi</td></tr>`;
-        return;
-      }
-
-      data.forEach((item, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${item.nama}</td>
-          <td>${item.asal}</td>
-          <td>${item.umur}</td>
-          <td>
-            <button class="actionBtn editBtn" onclick="editData(${index})">Edit</button>
-            <button class="actionBtn deleteBtn" onclick="deleteData(${index})">Hapus</button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
-    renderTable();
-
-    window.deleteData = (i) => {
-      if (confirm("Yakin hapus data ini?")) {
-        data.splice(i, 1);
-        localStorage.setItem("todoData", JSON.stringify(data));
-        renderTable();
-        showNotif("🗑 Data berhasil dihapus!");
-      }
-    };
-
-    window.editData = (i) => {
-      localStorage.setItem("editIndex", i);
-      localStorage.setItem("editData", JSON.stringify(data[i]));
-      window.location.href = "form.html";
-    };
-  }
-
-  // Form page
-  const form = document.getElementById("dataForm");
-  if (form) {
-    let data = JSON.parse(localStorage.getItem("todoData")) || [];
-    const editIndex = localStorage.getItem("editIndex");
-    const editData = localStorage.getItem("editData");
-
-    if (editIndex !== null && editData) {
-      const { nama, asal, umur } = JSON.parse(editData);
-      document.getElementById("nama").value = nama;
-      document.getElementById("asal").value = asal;
-      document.getElementById("umur").value = umur;
-    }
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const nama = document.getElementById("nama").value.trim();
-      const asal = document.getElementById("asal").value.trim();
-      const umur = parseInt(document.getElementById("umur").value);
-
-      // Validasi nama
-      if (nama.length < 3 || !/^[a-zA-Z\s]+$/.test(nama)) {
-        showNotif("⚠ Tolong masukkan nama dengan benar");
-        return;
-      }
-
-      // Validasi umur
-      if (umur < 1 || umur > 120 || isNaN(umur)) {
-        showNotif("🤔 Apakah anda manusia?");
-        return;
-      }
-
-      if (editIndex !== null) {
-        data[editIndex] = { nama, asal, umur };
-        localStorage.removeItem("editIndex");
-        localStorage.removeItem("editData");
-      } else {
-        data.push({ nama, asal, umur });
-      }
-
-      localStorage.setItem("todoData", JSON.stringify(data));
-      showNotif("✅ Data berhasil disimpan!", true);
-    });
-  }
+// Loading
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("loading").style.display = "none";
+  }, 1000);
 });
 
 // Notif
-function showNotif(message, redirect = false) {
-  const notif = document.getElementById("notification");
-  if (!notif) return;
-  notif.innerText = message;
-  notif.classList.remove("hidden");
-  setTimeout(() => notif.classList.add("show"), 50);
+function showNotif(msg, type="success") {
+  const notif = document.getElementById("notif");
+  notif.innerText = msg;
+  notif.className = "";
+  if (type === "error") notif.classList.add("error");
+  if (type === "warning") notif.classList.add("warning");
+  notif.style.display = "block";
+  setTimeout(() => notif.style.display = "none", 2500);
+}
 
-  setTimeout(() => {
-    notif.classList.remove("show");
-    setTimeout(() => {
-      notif.classList.add("hidden");
-      if (redirect) window.location.href = "index.html";
-    }, 400);
-  }, 2000);
+// Index Page
+if (document.getElementById("btnTambah")) {
+  const todoBody = document.getElementById("todoBody");
+  let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+  function renderTable() {
+    todoBody.innerHTML = "";
+    if (todos.length === 0) {
+      todoBody.innerHTML = `<tr><td colspan="5" class="empty">⚠ Data tidak terisi</td></tr>`;
+    } else {
+      todos.forEach((t, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${i+1}</td>
+          <td>${t.nama}</td>
+          <td>${t.asal}</td>
+          <td>${t.umur}</td>
+          <td>
+            <button onclick="editData(${i})">Edit</button>
+            <button onclick="deleteData(${i})">Hapus</button>
+          </td>
+        `;
+        todoBody.appendChild(tr);
+      });
+    }
+  }
+
+  window.deleteData = (i) => {
+    if (confirm("⚠ Yakin hapus data ini?")) {
+      todos.splice(i,1);
+      localStorage.setItem("todos", JSON.stringify(todos));
+      renderTable();
+      showNotif("Data berhasil dihapus", "warning");
+    }
+  }
+
+  window.editData = (i) => {
+    localStorage.setItem("editIndex", i);
+    window.location.href = "form.html";
+  }
+
+  document.getElementById("btnTambah").addEventListener("click", () => {
+    localStorage.removeItem("editIndex");
+    window.location.href = "form.html";
+  });
+
+  renderTable();
+}
+
+// Form Page
+if (document.getElementById("dataForm")) {
+  const form = document.getElementById("dataForm");
+  const nama = document.getElementById("nama");
+  const asal = document.getElementById("asal");
+  const umur = document.getElementById("umur");
+  const index = localStorage.getItem("editIndex");
+  let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+  if (index !== null) {
+    const data = todos[index];
+    if (data) {
+      nama.value = data.nama;
+      asal.value = data.asal;
+      umur.value = data.umur;
+    }
+  }
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!/^[A-Za-z ]{2,20}$/.test(nama.value)) {
+      showNotif("⚠ Tolong masukkan nama dengan benar", "error");
+      return;
+    }
+    if (umur.value < 1 || umur.value > 120) {
+      showNotif("🤔 Apakah anda manusia?", "error");
+      return;
+    }
+
+    const newData = { nama: nama.value, asal: asal.value, umur: umur.value };
+    if (index !== null && todos[index]) {
+      todos[index] = newData;
+      localStorage.removeItem("editIndex");
+      showNotif("Data berhasil diupdate");
+    } else {
+      todos.push(newData);
+      showNotif("Data berhasil disimpan");
+    }
+    localStorage.setItem("todos", JSON.stringify(todos));
+    setTimeout(() => window.location.href = "index.html", 1200);
+  });
+
+  document.getElementById("btnKembali").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
 }
