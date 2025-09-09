@@ -89,20 +89,34 @@ th {
   color: #fff;
 }
 .saveBtn {
-  background: #00ff99;
+  background: linear-gradient(45deg, #ff00ff, #00ffff);
   color: #000;
-}
-.backBtn {
-  background: #666;
-  color: #fff;
-  position: fixed;
-  bottom: 15px;
-  left: 15px;
 }
 .addBtn:hover, .editBtn:hover, .deleteBtn:hover,
 .saveBtn:hover, .backBtn:hover {
   transform: scale(1.1);
   box-shadow: 0 0 15px #fff;
+}
+
+/* Back Button */
+.backBtn {
+  background: #666;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+}
+.backBtn:hover {
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff;
 }
 
 /* Empty Data */
@@ -160,7 +174,8 @@ th {
 .yesBtn { background: #ff004c; color: #fff; }
 .noBtn { background: #666; color: #fff; }
 .yesBtn:hover, .noBtn:hover { transform: scale(1.1); }
-/* Form Container */
+
+/* Form Style */
 form {
   display: flex;
   flex-direction: column;
@@ -173,8 +188,6 @@ form {
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(255,0,255,0.3);
 }
-
-/* Input Style */
 form input {
   padding: 12px;
   border: none;
@@ -188,33 +201,12 @@ form input {
   transition: all 0.3s ease;
   box-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff inset;
 }
-
 form input:focus {
   background: rgba(40, 40, 70, 0.9);
   box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #ff00ff inset;
   transform: scale(1.05);
 }
 
-/* Save Button */
-.saveBtn {
-  background: linear-gradient(45deg, #ff00ff, #00ffff);
-  color: #000;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 0 15px #ff00ff, 0 0 30px #00ffff;
-  transition: all 0.3s ease;
-}
-
-.saveBtn:hover {
-  transform: scale(1.1) rotate(-1deg);
-  box-shadow: 0 0 25px #ff00ff, 0 0 50px #00ffff, 0 0 70px #ff00ff;
-}
 /* Notification */
 .notification {
   position: fixed;
@@ -232,12 +224,10 @@ form input:focus {
   z-index: 4000;
   transition: all 0.5s ease;
 }
-
 .notification.show {
   opacity: 1;
   transform: translateX(-50%) scale(1);
 }
-
 .notification.hidden {
   display: none;
 }
