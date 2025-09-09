@@ -85,7 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const nama = document.getElementById("nama").value;
       const asal = document.getElementById("asal").value;
-      const umur = document.getElementById("umur").value;
+      const umur = parseInt(document.getElementById("umur").value);
+
+      // ✅ Validasi umur
+      if (umur < 1 || umur > 120 || isNaN(umur)) {
+        showCustomNotif("🤔 Apakah anda manusia?", false, true);
+        return;
+      }
 
       const editIndex = localStorage.getItem("editIndex");
       if (editIndex !== null) {
@@ -99,23 +105,29 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("todoData", JSON.stringify(data));
 
       // 🔔 Notifikasi sukses
-      const notif = document.getElementById("notification");
-      if (notif) {
-        notif.classList.remove("hidden");
-        setTimeout(() => notif.classList.add("show"), 50);
-
-        // Hilang setelah 2 detik lalu balik ke index.html
-        setTimeout(() => {
-          notif.classList.remove("show");
-          setTimeout(() => {
-            notif.classList.add("hidden");
-            window.location.href = "index.html";
-          }, 500);
-        }, 2000);
-      } else {
-        // fallback kalau notif ga ada
-        window.location.href = "index.html";
-      }
+      showCustomNotif("✅ Data berhasil disimpan!", true);
     });
   }
 });
+
+// Custom Notification
+function showCustomNotif(message, redirect = false, isError = false) {
+  const notif = document.getElementById("notification");
+  if (notif) {
+    notif.innerText = message;
+    notif.classList.remove("hidden", "error");
+    if (isError) notif.classList.add("error");
+
+    setTimeout(() => notif.classList.add("show"), 50);
+
+    setTimeout(() => {
+      notif.classList.remove("show");
+      setTimeout(() => {
+        notif.classList.add("hidden");
+        if (redirect) window.location.href = "index.html";
+      }, 500);
+    }, 2000);
+  } else {
+    if (redirect) window.location.href = "index.html";
+  }
+}

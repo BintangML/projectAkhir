@@ -20,7 +20,6 @@ html, body {
   align-items: center;
   z-index: 2000;
 }
-
 .spinner {
   border: 6px solid rgba(255,255,255,0.2);
   border-top: 6px solid #ff00ff;
@@ -29,13 +28,10 @@ html, body {
   animation: spin 1s linear infinite;
   margin-bottom: 10px;
 }
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Content */
 .hidden { display: none; }
-
 #content {
   text-align: center;
   opacity: 0;
@@ -43,9 +39,7 @@ html, body {
   animation: showContent 0.6s ease forwards;
   animation-delay: 0.1s;
 }
-@keyframes showContent {
-  to { opacity: 1; transform: scale(1); }
-}
+@keyframes showContent { to { opacity: 1; transform: scale(1); } }
 
 /* Table */
 table {
@@ -76,18 +70,9 @@ th {
   font-weight: bold;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.addBtn {
-  background: #00ffff;
-  color: #000;
-}
-.editBtn {
-  background: #ffaa00;
-  color: #000;
-}
-.deleteBtn {
-  background: #ff004c;
-  color: #fff;
-}
+.addBtn { background: #00ffff; color: #000; }
+.editBtn { background: #ffaa00; color: #000; }
+.deleteBtn { background: #ff004c; color: #fff; }
 .saveBtn {
   background: linear-gradient(45deg, #ff00ff, #00ffff);
   color: #000;
@@ -127,10 +112,7 @@ th {
   padding: 20px;
   color: #ff00ff;
   letter-spacing: 1px;
-  text-shadow: 
-    0 0 8px #ff00ff,
-    0 0 15px #00ffff,
-    0 0 25px #ff00ff;
+  text-shadow: 0 0 8px #ff00ff, 0 0 15px #00ffff, 0 0 25px #ff00ff;
   animation: flicker 1.5s infinite alternate;
 }
 @keyframes flicker {
@@ -160,9 +142,7 @@ th {
   transform: scale(0.7);
   animation: zoomIn 0.3s forwards;
 }
-@keyframes zoomIn {
-  to { transform: scale(1); }
-}
+@keyframes zoomIn { to { transform: scale(1); } }
 .modal-actions { margin-top: 15px; }
 .yesBtn, .noBtn {
   padding: 8px 16px;
@@ -175,7 +155,7 @@ th {
 .noBtn { background: #666; color: #fff; }
 .yesBtn:hover, .noBtn:hover { transform: scale(1.1); }
 
-/* Form Style */
+/* Form */
 form {
   display: flex;
   flex-direction: column;
@@ -228,6 +208,17 @@ form input:focus {
   opacity: 1;
   transform: translateX(-50%) scale(1);
 }
-.notification.hidden {
-  display: none;
+.notification.hidden { display: none; }
+
+/* Error Shake */
+.notification.error {
+  background: linear-gradient(45deg, #ff004c, #ff9900);
+  color: #fff;
+  animation: shake 0.4s;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  25% { transform: translateX(-52%) translateY(0); }
+  50% { transform: translateX(-48%) translateY(0); }
+  75% { transform: translateX(-52%) translateY(0); }
 }
