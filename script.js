@@ -1,3 +1,15 @@
+// ========== Loader ==========
+window.addEventListener("load", () => {
+  const loader = document.getElementById("loading");
+  if (loader) {
+    setTimeout(() => {
+      loader.style.opacity = "0";
+      loader.style.pointerEvents = "none";
+    }, 500);
+    setTimeout(() => loader.remove(), 1000);
+  }
+});
+
 // ========== Fungsi Notifikasi ==========
 function showNotif(message, type = "success") {
   const notif = document.createElement("div");
@@ -5,10 +17,7 @@ function showNotif(message, type = "success") {
   notif.textContent = message;
   document.body.appendChild(notif);
 
-  setTimeout(() => {
-    notif.classList.add("show");
-  }, 10);
-
+  setTimeout(() => notif.classList.add("show"), 10);
   setTimeout(() => {
     notif.classList.remove("show");
     setTimeout(() => notif.remove(), 300);
@@ -70,12 +79,16 @@ if (document.getElementById("btnTambah")) {
     };
 
     document.getElementById("noDel").onclick = () => {
-      confirmBox.classList.add("hide");
-      setTimeout(() => confirmBox.remove(), 300);
+      confirmBox.remove();
     };
   };
 
   renderTable();
+
+  // tombol tambah
+  document.getElementById("btnTambah").addEventListener("click", () => {
+    window.location.href = "form.html";
+  });
 }
 
 // ========== Form Page ==========
@@ -101,19 +114,19 @@ if (document.getElementById("dataForm")) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // 🔥 Validasi input kosong
+    // Validasi kosong
     if (!nama.value || !asal.value || !umur.value) {
       showNotif("⚠ Tolong isi data terlebih dahulu", "error");
       return;
     }
 
-    // 🔥 Validasi nama ngawur
+    // Validasi nama ngawur
     if (!/^[A-Za-z ]{2,20}$/.test(nama.value)) {
       showNotif("⚠ Tolong masukkan nama dengan benar", "error");
       return;
     }
 
-    // 🔥 Validasi umur ngawur
+    // Validasi umur ngawur
     if (umur.value < 1 || umur.value > 120) {
       showNotif("🤔 Apakah anda manusia?", "error");
       return;

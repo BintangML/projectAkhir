@@ -27,6 +27,7 @@ h1 {
   justify-content: center;
   align-items: center;
   z-index: 999;
+  transition: opacity 0.5s ease;
 }
 .loader {
   border: 6px solid rgba(255,255,255,0.1);
@@ -131,48 +132,21 @@ input::placeholder {
 }
 
 /* Notif */
-#notif {
+.notif {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #0f0;
-  color: #000;
   padding: 12px 20px;
   border-radius: 8px;
-  display: none;
   font-weight: bold;
-  animation: zoomIn 0.4s ease;
+  transform: scale(0.5);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
 }
-#notif.error { background: #f00; color: #fff; }
-#notif.warning { background: #ff0; color: #000; }
-
-@keyframes zoomIn {
-  from { transform: scale(0.5); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+.notif.show {
+  transform: scale(1);
+  opacity: 1;
 }
-/* Button umum */
-button {
-  background: linear-gradient(45deg, #0ff, #09f);
-  border: none;
-  padding: 10px 20px;
-  margin: 10px 0;
-  border-radius: 6px;
-  color: #fff;              /* teks putih jelas */
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover {
-  opacity: 0.85;
-  transform: scale(1.03);
-}
-
-/* Tombol Hapus (warna merah) */
-button.delete {
-  background: linear-gradient(45deg, #f00, #a00);
-}
-button.delete:hover {
-  opacity: 0.85;
-  transform: scale(1.03);
-  background: linear-gradient(45deg, #d00, #800);
-}
+.notif.success { background: #0f0; color: #000; }
+.notif.error { background: #f00; color: #fff; }
