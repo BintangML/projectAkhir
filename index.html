@@ -3,22 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Todo List</title>
+  <title>My ToDo List</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Loader -->
-  <div id="loader">
-    <div class="spinner"></div>
-    <p>Loading...</p>
-  </div>
+  <div class="loader"><div></div></div>
 
-  <!-- Main Content -->
-  <div id="content" class="hidden">
-    <h1>📋 My Todo List</h1>
-    <div class="topBar">
-      <button class="addBtn" onclick="window.location.href='form.html'">➕ Tambah Data</button>
-    </div>
+  <div class="container hidden">
+    <h1>📋 My ToDo List</h1>
+    <button class="addBtn" onclick="window.location.href='form.html'">➕ Tambah</button>
     <table>
       <thead>
         <tr>
@@ -29,19 +22,16 @@
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody id="todoBody"></tbody>
+      <tbody id="todoTable"></tbody>
     </table>
+    <p id="emptyMessage" class="hidden">⚠ Data tidak terisi</p>
   </div>
 
-  <!-- Modal Konfirmasi -->
-  <div id="modal" class="modal hidden">
-    <div class="modal-content">
-      <p>⚠ Yakin hapus data ini?</p>
-      <div class="modal-actions">
-        <button onclick="confirmDelete()" class="yesBtn">Ya</button>
-        <button onclick="closeModal()" class="noBtn">Tidak</button>
-      </div>
-    </div>
+  <!-- Konfirmasi Hapus -->
+  <div id="confirmBox" class="confirmBox hidden">
+    <p>Yakin hapus data ini?</p>
+    <button id="yesBtn">Ya</button>
+    <button id="noBtn">Tidak</button>
   </div>
 
   <script src="script.js"></script>

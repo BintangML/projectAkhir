@@ -8,12 +8,12 @@
 </head>
 <body>
   <!-- Loader -->
-  <div id="loader">
-    <div class="spinner"></div>
-    <p>Loading...</p>
-  </div>
+  <div class="loader"><div></div></div>
 
-  <!-- Form Content -->
+  <!-- Notifikasi -->
+  <div id="notification" class="notification hidden">✅ Data berhasil disimpan!</div>
+
+  <!-- Form -->
   <div id="content" class="hidden">
     <h1>➕ Tambah Data</h1>
     <form id="dataForm">
@@ -24,11 +24,8 @@
     </form>
   </div>
 
-  <!-- Tombol kembali -->
+  <!-- Tombol kembali (pojok kiri bawah) -->
   <button class="backBtn" onclick="window.location.href='index.html'">⬅ Kembali</button>
-
-  <!-- Notifikasi -->
-  <div id="notification" class="notification hidden">✅ Data berhasil disimpan!</div>
 
   <script src="script.js"></script>
 </body>

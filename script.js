@@ -1,99 +1,111 @@
-let data = JSON.parse(localStorage.getItem("todoData")) || [];
-let deleteIndex = null;
-
-function renderTable() {
-  const tbody = document.getElementById("todoBody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
-  if (data.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="5" class="emptyMsg">⚠ Data tidak terisi</td>
-      </tr>
-    `;
-    return;
-  }
-
-  data.forEach((item, index) => {
-    const row = `
-      <tr>
-        <td>${index + 1}</td>
-        <td>${item.nama}</td>
-        <td>${item.asal}</td>
-        <td>${item.umur}</td>
-        <td>
-          <button class="editBtn" onclick="editData(${index})">Edit</button>
-          <button class="deleteBtn" onclick="openModal(${index})">Hapus</button>
-        </td>
-      </tr>
-    `;
-    tbody.innerHTML += row;
-  });
-}
-
-// Modal Hapus
-function openModal(index) {
-  deleteIndex = index;
-  document.getElementById("modal").classList.remove("hidden");
-}
-function closeModal() {
-  document.getElementById("modal").classList.add("hidden");
-}
-function confirmDelete() {
-  if (deleteIndex !== null) {
-    data.splice(deleteIndex, 1);
-    localStorage.setItem("todoData", JSON.stringify(data));
-    renderTable();
-    closeModal();
-  }
-}
-
-// Edit
-function editData(index) {
-  const item = data[index];
-  localStorage.setItem("editIndex", index);
-  localStorage.setItem("editData", JSON.stringify(item));
-  window.location.href = "form.html";
-}
-
-// Loader + Form handling
 document.addEventListener("DOMContentLoaded", () => {
-  // Loader transition
-  setTimeout(() => {
-    const loader = document.getElementById("loader");
-    if (loader) loader.style.display = "none";
-    const content = document.getElementById("content");
-    if (content) content.classList.remove("hidden");
-  }, 1600);
+  const loader = document.querySelector(".loader");
+  const container = document.querySelector(".container");
+  const content = document.getElementById("content");
+  if (loader) {
+    setTimeout(() => {
+      loader.style.display = "none";
+      if (container) container.classList.remove("hidden");
+      if (content) content.classList.remove("hidden");
+    }, 1200);
+  }
 
-  // Render table kalau di index.html
-  renderTable();
+  // ===== INDEX PAGE =====
+  const table = document.getElementById("todoTable");
+  if (table) {
+    let data = JSON.parse(localStorage.getItem("todoData")) || [];
+    const emptyMessage = document.getElementById("emptyMessage");
+    const confirmBox = document.getElementById("confirmBox");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    let deleteIndex = null;
 
-  // Handle form submit kalau di form.html
+    function renderTable() {
+      table.innerHTML = "";
+      if (data.length === 0) {
+        emptyMessage.classList.remove("hidden");
+      } else {
+        emptyMessage.classList.add("hidden");
+        data.forEach((item, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${item.nama}</td>
+            <td>${item.asal}</td>
+            <td>${item.umur}</td>
+            <td>
+              <button class="editBtn" data-index="${index}">Edit</button>
+              <button class="deleteBtn" data-index="${index}">Hapus</button>
+            </td>
+          `;
+          table.appendChild(row);
+        });
+      }
+    }
+
+    renderTable();
+
+    table.addEventListener("click", (e) => {
+      if (e.target.classList.contains("editBtn")) {
+        const index = e.target.getAttribute("data-index");
+        localStorage.setItem("editIndex", index);
+        localStorage.setItem("editData", JSON.stringify(data[index]));
+        window.location.href = "form.html";
+      }
+
+      if (e.target.classList.contains("deleteBtn")) {
+        deleteIndex = e.target.getAttribute("data-index");
+        confirmBox.classList.remove("hidden");
+        confirmBox.classList.add("zoomIn");
+      }
+    });
+
+    yesBtn.addEventListener("click", () => {
+      if (deleteIndex !== null) {
+        data.splice(deleteIndex, 1);
+        localStorage.setItem("todoData", JSON.stringify(data));
+        renderTable();
+        confirmBox.classList.add("hidden");
+      }
+    });
+
+    noBtn.addEventListener("click", () => {
+      confirmBox.classList.add("hidden");
+    });
+  }
+
+  // ===== FORM PAGE =====
   const form = document.getElementById("dataForm");
   if (form) {
-    const editDataStored = localStorage.getItem("editData");
-    if (editDataStored) {
-      const edit = JSON.parse(editDataStored);
-      document.getElementById("nama").value = edit.nama;
-      document.getElementById("asal").value = edit.asal;
-      document.getElementById("umur").value = edit.umur;
+    let data = JSON.parse(localStorage.getItem("todoData")) || [];
+    const editIndex = localStorage.getItem("editIndex");
+    const editData = JSON.parse(localStorage.getItem("editData"));
+
+    if (editIndex !== null && editData) {
+      document.getElementById("nama").value = editData.nama;
+      document.getElementById("asal").value = editData.asal;
+      document.getElementById("umur").value = editData.umur;
     }
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const nama = document.getElementById("nama").value;
-      const asal = document.getElementById("asal").value;
+      const nama = document.getElementById("nama").value.trim();
+      const asal = document.getElementById("asal").value.trim();
       const umur = parseInt(document.getElementById("umur").value);
 
-      // ✅ Validasi umur
-      if (umur < 1 || umur > 120 || isNaN(umur)) {
-        showCustomNotif("🤔 Apakah anda manusia?", false, true);
+      // ✅ Validasi nama (hanya huruf & spasi, min 2 huruf, max 30)
+      const namaValid = /^[a-zA-Z\s]{2,30}$/;
+      if (!namaValid.test(nama)) {
+        showCustomNotif("⚠ Tolong masukkan nama dengan benar");
         return;
       }
 
-      const editIndex = localStorage.getItem("editIndex");
+      // ✅ Validasi umur
+      if (umur < 1 || umur > 120 || isNaN(umur)) {
+        showCustomNotif("🤔 Apakah anda manusia?");
+        return;
+      }
+
       if (editIndex !== null) {
         data[editIndex] = { nama, asal, umur };
         localStorage.removeItem("editIndex");
@@ -103,21 +115,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       localStorage.setItem("todoData", JSON.stringify(data));
-
-      // 🔔 Notifikasi sukses
       showCustomNotif("✅ Data berhasil disimpan!", true);
     });
   }
 });
 
-// Custom Notification
-function showCustomNotif(message, redirect = false, isError = false) {
+// ===== Helper Notifikasi =====
+function showCustomNotif(message, redirect = false) {
   const notif = document.getElementById("notification");
   if (notif) {
     notif.innerText = message;
-    notif.classList.remove("hidden", "error");
-    if (isError) notif.classList.add("error");
-
+    notif.classList.remove("hidden");
     setTimeout(() => notif.classList.add("show"), 50);
 
     setTimeout(() => {
@@ -127,7 +135,5 @@ function showCustomNotif(message, redirect = false, isError = false) {
         if (redirect) window.location.href = "index.html";
       }, 500);
     }, 2000);
-  } else {
-    if (redirect) window.location.href = "index.html";
   }
 }
