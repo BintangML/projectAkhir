@@ -1,90 +1,69 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const loader = document.querySelector(".loader");
-  const container = document.querySelector(".container");
+  const loading = document.getElementById("loading");
   const content = document.getElementById("content");
-  if (loader) {
+  if (loading && content) {
     setTimeout(() => {
-      loader.style.display = "none";
-      if (container) container.classList.remove("hidden");
-      if (content) content.classList.remove("hidden");
-    }, 1200);
+      loading.style.display = "none";
+      content.classList.remove("hidden");
+    }, 1000);
   }
 
-  // ===== INDEX PAGE =====
-  const table = document.getElementById("todoTable");
-  if (table) {
+  // Index page
+  const tableBody = document.getElementById("todoBody");
+  if (tableBody) {
     let data = JSON.parse(localStorage.getItem("todoData")) || [];
-    const emptyMessage = document.getElementById("emptyMessage");
-    const confirmBox = document.getElementById("confirmBox");
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    let deleteIndex = null;
 
     function renderTable() {
-      table.innerHTML = "";
+      tableBody.innerHTML = "";
       if (data.length === 0) {
-        emptyMessage.classList.remove("hidden");
-      } else {
-        emptyMessage.classList.add("hidden");
-        data.forEach((item, index) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${item.nama}</td>
-            <td>${item.asal}</td>
-            <td>${item.umur}</td>
-            <td>
-              <button class="editBtn" data-index="${index}">Edit</button>
-              <button class="deleteBtn" data-index="${index}">Hapus</button>
-            </td>
-          `;
-          table.appendChild(row);
-        });
+        tableBody.innerHTML = `<tr><td colspan="5" class="empty">⚠ Data tidak terisi</td></tr>`;
+        return;
       }
-    }
 
+      data.forEach((item, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${item.nama}</td>
+          <td>${item.asal}</td>
+          <td>${item.umur}</td>
+          <td>
+            <button class="actionBtn editBtn" onclick="editData(${index})">Edit</button>
+            <button class="actionBtn deleteBtn" onclick="deleteData(${index})">Hapus</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
     renderTable();
 
-    table.addEventListener("click", (e) => {
-      if (e.target.classList.contains("editBtn")) {
-        const index = e.target.getAttribute("data-index");
-        localStorage.setItem("editIndex", index);
-        localStorage.setItem("editData", JSON.stringify(data[index]));
-        window.location.href = "form.html";
-      }
-
-      if (e.target.classList.contains("deleteBtn")) {
-        deleteIndex = e.target.getAttribute("data-index");
-        confirmBox.classList.remove("hidden");
-        confirmBox.classList.add("zoomIn");
-      }
-    });
-
-    yesBtn.addEventListener("click", () => {
-      if (deleteIndex !== null) {
-        data.splice(deleteIndex, 1);
+    window.deleteData = (i) => {
+      if (confirm("Yakin hapus data ini?")) {
+        data.splice(i, 1);
         localStorage.setItem("todoData", JSON.stringify(data));
         renderTable();
-        confirmBox.classList.add("hidden");
       }
-    });
+    };
 
-    noBtn.addEventListener("click", () => {
-      confirmBox.classList.add("hidden");
-    });
+    window.editData = (i) => {
+      localStorage.setItem("editIndex", i);
+      localStorage.setItem("editData", JSON.stringify(data[i]));
+      window.location.href = "form.html";
+    };
   }
 
-  // ===== FORM PAGE =====
+  // Form page
   const form = document.getElementById("dataForm");
   if (form) {
     let data = JSON.parse(localStorage.getItem("todoData")) || [];
     const editIndex = localStorage.getItem("editIndex");
-    const editData = JSON.parse(localStorage.getItem("editData"));
+    const editData = localStorage.getItem("editData");
 
     if (editIndex !== null && editData) {
-      document.getElementById("nama").value = editData.nama;
-      document.getElementById("asal").value = editData.asal;
-      document.getElementById("umur").value = editData.umur;
+      const { nama, asal, umur } = JSON.parse(editData);
+      document.getElementById("nama").value = nama;
+      document.getElementById("asal").value = asal;
+      document.getElementById("umur").value = umur;
     }
 
     form.addEventListener("submit", (e) => {
@@ -93,16 +72,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const asal = document.getElementById("asal").value.trim();
       const umur = parseInt(document.getElementById("umur").value);
 
-      // ✅ Validasi nama (hanya huruf & spasi, min 2 huruf, max 30)
-      const namaValid = /^[a-zA-Z\s]{2,30}$/;
-      if (!namaValid.test(nama)) {
-        showCustomNotif("⚠ Tolong masukkan nama dengan benar");
+      // Validasi nama
+      if (nama.length < 3 || !/^[a-zA-Z\s]+$/.test(nama)) {
+        showNotif("⚠ Tolong masukkan nama dengan benar");
         return;
       }
 
-      // ✅ Validasi umur
+      // Validasi umur
       if (umur < 1 || umur > 120 || isNaN(umur)) {
-        showCustomNotif("🤔 Apakah anda manusia?");
+        showNotif("🤔 Apakah anda manusia?");
         return;
       }
 
@@ -115,25 +93,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       localStorage.setItem("todoData", JSON.stringify(data));
-      showCustomNotif("✅ Data berhasil disimpan!", true);
+      showNotif("✅ Data berhasil disimpan!", true);
     });
   }
 });
 
-// ===== Helper Notifikasi =====
-function showCustomNotif(message, redirect = false) {
+// Notif
+function showNotif(message, redirect = false) {
   const notif = document.getElementById("notification");
-  if (notif) {
-    notif.innerText = message;
-    notif.classList.remove("hidden");
-    setTimeout(() => notif.classList.add("show"), 50);
+  if (!notif) return;
+  notif.innerText = message;
+  notif.classList.remove("hidden");
+  setTimeout(() => notif.classList.add("show"), 50);
 
+  setTimeout(() => {
+    notif.classList.remove("show");
     setTimeout(() => {
-      notif.classList.remove("show");
-      setTimeout(() => {
-        notif.classList.add("hidden");
-        if (redirect) window.location.href = "index.html";
-      }, 500);
-    }, 2000);
-  }
+      notif.classList.add("hidden");
+      if (redirect) window.location.href = "index.html";
+    }, 400);
+  }, 2000);
 }

@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My ToDo List</title>
+  <title>My Todo List</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="loader"><div></div></div>
+  <!-- Loading -->
+  <div id="loading">
+    <h2>⚡ Loading...</h2>
+  </div>
 
-  <div class="container hidden">
-    <h1>📋 My ToDo List</h1>
+  <div class="container hidden" id="content">
+    <h1>📋 My Todo List</h1>
     <button class="addBtn" onclick="window.location.href='form.html'">➕ Tambah</button>
+
     <table>
       <thead>
         <tr>
@@ -22,17 +26,14 @@
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody id="todoTable"></tbody>
+      <tbody id="todoBody">
+        <tr><td colspan="5" class="empty">⚠ Data tidak terisi</td></tr>
+      </tbody>
     </table>
-    <p id="emptyMessage" class="hidden">⚠ Data tidak terisi</p>
   </div>
 
-  <!-- Konfirmasi Hapus -->
-  <div id="confirmBox" class="confirmBox hidden">
-    <p>Yakin hapus data ini?</p>
-    <button id="yesBtn">Ya</button>
-    <button id="noBtn">Tidak</button>
-  </div>
+  <!-- Notifikasi -->
+  <div id="notification" class="hidden"></div>
 
   <script src="script.js"></script>
 </body>

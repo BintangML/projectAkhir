@@ -7,14 +7,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Loader -->
-  <div class="loader"><div></div></div>
+  <!-- Loading -->
+  <div id="loading">
+    <h2>⚡ Loading...</h2>
+  </div>
 
-  <!-- Notifikasi -->
-  <div id="notification" class="notification hidden">✅ Data berhasil disimpan!</div>
-
-  <!-- Form -->
-  <div id="content" class="hidden">
+  <div id="content" class="hidden form-container">
     <h1>➕ Tambah Data</h1>
     <form id="dataForm">
       <input type="text" id="nama" placeholder="Nama" required>
@@ -24,8 +22,11 @@
     </form>
   </div>
 
-  <!-- Tombol kembali (pojok kiri bawah) -->
+  <!-- Tombol kembali -->
   <button class="backBtn" onclick="window.location.href='index.html'">⬅ Kembali</button>
+
+  <!-- Notifikasi -->
+  <div id="notification" class="hidden"></div>
 
   <script src="script.js"></script>
 </body>
