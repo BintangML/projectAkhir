@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Todo List</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div id="content" class="hidden">
+    <h1>📋 My Todo List</h1>
+    <div class="topBar">
+      <button class="addBtn" onclick="window.location.href='form.html'">➕ Tambah Data</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Asal</th>
+          <th>Umur</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="todoBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Modal Konfirmasi -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <p>⚠ Yakin hapus data ini?</p>
+      <div class="modal-actions">
+        <button onclick="confirmDelete()" class="yesBtn">Ya</button>
+        <button onclick="closeModal()" class="noBtn">Tidak</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
