@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.splice(i, 1);
         localStorage.setItem("todoData", JSON.stringify(data));
         renderTable();
+        showNotif("🗑 Data berhasil dihapus!");
       }
     };
 
