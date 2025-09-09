@@ -10,9 +10,8 @@ window.addEventListener("load", () => {
   }
 });
 
-// ========== Fungsi Notifikasi (pakai #notif supaya cocok dgn CSS) ==========
+// ========== Fungsi Notifikasi ==========
 function showNotif(message, type = "success") {
-  // cari elemen #notif, kalau belum ada buat satu (supaya CSS #notif.* berlaku)
   let notif = document.getElementById("notif");
   if (!notif) {
     notif = document.createElement("div");
@@ -20,26 +19,19 @@ function showNotif(message, type = "success") {
     document.body.appendChild(notif);
   }
 
-  // reset class / teks
-  notif.className = ""; // kosongkan class
+  notif.className = ""; // reset class
   notif.textContent = message;
 
-  // set kelas tipe (CSS: #notif.error / #notif.warning / #notif.success)
   if (type === "error") notif.classList.add("error");
   else if (type === "warning") notif.classList.add("warning");
   else notif.classList.add("success");
 
-  // tampilkan dengan animasi (CSS harus meng-handle #notif.show)
   notif.style.display = "block";
   setTimeout(() => notif.classList.add("show"), 20);
 
-  // sembunyikan setelah 2s
   setTimeout(() => {
     notif.classList.remove("show");
-    setTimeout(() => {
-      // sembunyikan permanen setelah anim out
-      notif.style.display = "none";
-    }, 300);
+    setTimeout(() => (notif.style.display = "none"), 300);
   }, 2000);
 }
 
@@ -71,7 +63,7 @@ if (document.getElementById("btnTambah")) {
     });
   }
 
-  // delegasi klik untuk tombol hapus (menghindari id conflict)
+  // delegasi klik tombol hapus
   todoBody.addEventListener("click", (ev) => {
     const btn = ev.target;
     if (btn && btn.classList.contains("delete")) {
@@ -86,10 +78,10 @@ if (document.getElementById("btnTambah")) {
     window.location.href = "form.html";
   };
 
-  // open confirm: buat elemen konfirmasi sementara (no global ids)
+  // Konfirmasi hapus
   function openDeleteConfirm(i) {
     const confirmBox = document.createElement("div");
-    confirmBox.className = "confirm-box"; // styling optional dari CSS jika ada
+    confirmBox.className = "confirm-box";
     confirmBox.innerHTML = `
       <div class="confirm-content" style="background:#111;color:#fff;padding:18px;border-radius:8px;box-shadow:0 6px 30px rgba(0,0,0,0.6);max-width:90%;margin:20px auto;text-align:center;">
         <p style="margin-bottom:12px">⚠ Yakin ingin menghapus data ini?</p>
@@ -100,7 +92,6 @@ if (document.getElementById("btnTambah")) {
       </div>
     `;
 
-    // tambahkan overlay style supaya terlihat modal
     confirmBox.style.position = "fixed";
     confirmBox.style.inset = "0";
     confirmBox.style.display = "flex";
@@ -115,17 +106,14 @@ if (document.getElementById("btnTambah")) {
     const no = confirmBox.querySelector("button.no");
 
     yes.addEventListener("click", () => {
-      // hapus item
       todos.splice(i, 1);
       localStorage.setItem("todos", JSON.stringify(todos));
       renderTable();
-      showNotif("Data berhasil dihapus", "success");
+      showNotif("✅ Data berhasil dihapus", "success");
       confirmBox.remove();
     });
 
-    no.addEventListener("click", () => {
-      confirmBox.remove();
-    });
+    no.addEventListener("click", () => confirmBox.remove());
   }
 
   // tombol tambah
@@ -134,7 +122,6 @@ if (document.getElementById("btnTambah")) {
     window.location.href = "form.html";
   });
 
-  // render awal
   renderTable();
 }
 
@@ -157,23 +144,19 @@ if (document.getElementById("dataForm")) {
     }
   }
 
-  // Submit form
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Validasi kosong
     if (!nama.value || !asal.value || !umur.value) {
       showNotif("⚠ Tolong isi data terlebih dahulu", "error");
       return;
     }
 
-    // Validasi nama ngawur
     if (!/^[A-Za-z ]{2,20}$/.test(nama.value)) {
       showNotif("⚠ Tolong masukkan nama dengan benar", "error");
       return;
     }
 
-    // Validasi umur ngawur
     const umurNum = parseInt(umur.value, 10);
     if (isNaN(umurNum) || umurNum < 1 || umurNum > 120) {
       showNotif("🤔 Apakah anda manusia?", "error");
@@ -185,21 +168,17 @@ if (document.getElementById("dataForm")) {
     if (index !== null && todos[index]) {
       todos[index] = newData;
       localStorage.removeItem("editIndex");
-      showNotif("Data berhasil diupdate", "success");
+      showNotif("✅ Data berhasil diupdate", "success");
     } else {
       todos.push(newData);
-      showNotif("Data berhasil disimpan", "success");
+      showNotif("✅ Data berhasil disimpan", "success");
     }
 
     localStorage.setItem("todos", JSON.stringify(todos));
     setTimeout(() => (window.location.href = "index.html"), 1000);
   });
 
-  // Tombol kembali (ada di form.html)
-  const backBtn = document.getElementById("btnKembali");
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
-  }
+  document.getElementById("btnKembali").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
 }
